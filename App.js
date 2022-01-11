@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import { Camera } from 'expo-camera';
-// import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 // import '@tensorflow/tfjs-react-native';
 
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
@@ -42,9 +42,9 @@ const handleCameraStream = (images, updatePreview, gl) => {
 
 const App = () => {
 
-  // useEffect(() => {
-  //   (async() => await tf.ready())();
-  // }, [])
+  useEffect(() => {
+    (async() => await tf.ready())();
+  }, [])
 
   return (
     <SafeAreaView >
