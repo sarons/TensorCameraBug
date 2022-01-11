@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as tf from '@tensorflow/tfjs';
-// import '@tensorflow/tfjs-react-native';
+import '@tensorflow/tfjs-react-native';
 
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 
@@ -23,7 +23,9 @@ const TensorCamera = cameraWithTensors(Camera);
 
 const handleCameraStream = (images, updatePreview, gl) => {
   const loop = async () => {
-    const nextImageTensor = images.next().value
+    const nextImageTensor = await images.next().value
+    console.log(nextImageTensor.toFloat())
+    console.log(nextImageTensor.expandDims(0))
 
     nextImageTensor.toFloat();
     // throws [Error: Argument 'x' passed to 'cast' must be a Tensor or TensorLike, but got 'Tensor']
@@ -35,7 +37,7 @@ const handleCameraStream = (images, updatePreview, gl) => {
     // updatePreview();
     // gl.endFrameEXP();
 
-    requestAnimationFrame(loop);
+    // requestAnimationFrame(loop);
   }
   loop();
 }
@@ -43,7 +45,10 @@ const handleCameraStream = (images, updatePreview, gl) => {
 const App = () => {
 
   useEffect(() => {
-    (async() => await tf.ready())();
+    (async() => {
+      await Camera.requestCameraPermissionsAsync()
+      await tf.ready()
+    })();
   }, [])
 
   return (
@@ -55,8 +60,8 @@ const App = () => {
         style={styles.camera}
         type={Camera.Constants.Type.back}
         // Tensor related props
-        resizeHeight={200}
-        resizeWidth={152}
+        resizeHeight={640}
+        resizeWidth={640}
         resizeDepth={3}
         onReady={handleCameraStream}
         // autorender={true}
@@ -68,8 +73,8 @@ const App = () => {
 
 const styles = StyleSheet.create({
   camera: {
-    width: '80%',
-    height: '80%'
+    width: '100%',
+    height: '90%'
   }
 });
 
